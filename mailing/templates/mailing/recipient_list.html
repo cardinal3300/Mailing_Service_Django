@@ -1,0 +1,13 @@
+<!-- mailing/recipient_list.html -->
+<h1>Управление получателями</h1>
+<a href="{% url 'mailing:recipient_create' %}">Добавить получателя</a>
+<ul>
+    {% for recipient in object_list %}
+        <li>
+            {{ recipient.email }} -
+            <a href="{% url 'mailing:recipient_update' recipient.pk %}">Редактировать</a> |
+            <a href="{% url 'mailing:recipient_delete' recipient.pk %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'mailing:home' %}">На главную</a>

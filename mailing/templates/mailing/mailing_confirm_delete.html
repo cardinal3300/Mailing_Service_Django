@@ -1,0 +1,8 @@
+<!-- mailing/mailing_confirm_delete.html -->
+<h1>{% if form_title %}{{ form_title }}{% else %}{% if object %}Редактировать{% else %}Создать{% endif %}{% endif %} рассылку</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+<a href="{% url 'mailing:mailing_list' %}">Назад к списку</a>
