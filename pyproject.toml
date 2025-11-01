@@ -1,31 +1,34 @@
-[project]
+[tool.poetry]
 name = "mailing-service-django"
 version = "0.1.0"
 description = ""
-authors = [
-    {name = "Igor Zherdev",email = "cardinal3300@gmail.com"}
+authors = ["Igor Zherdev <cardinal3300@gmail.com>"]
+packages = [
+    { include = "mailing" },
+    { include = "users" }
 ]
 readme = "README.md"
-requires-python = ">=3.14"
-dependencies = [
-    "django (>=5.2.7,<6.0.0)",
-    "dotenv (>=0.9.9,<0.10.0)",
-    "psycopg2 (>=2.9.11,<3.0.0)",
-    "pillow (>=12.0.0,<13.0.0)"
-]
+
+
+[tool.poetry.dependencies]
+python = ">=3.14"
+django = ">=5.2.7,<6.0.0"
+python-dotenv = ">=1.0.0,<2.0.0"
+psycopg2 = ">=2.9.11,<3.0.0"
+pillow = ">=12.0.0,<13.0.0"
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[dependency-groups]
-lint = [
-    "flake8 (>=7.3.0,<8.0.0)",
-    "black (>=25.9.0,<26.0.0)",
-    "isort (>=7.0.0,<8.0.0)",
-    "mypy (>=1.18.2,<2.0.0)"
-]
+
+[tool.poetry.group.dev.dependencies]
+black = ">=25.9.0,<26.0.0"
+flake8 = ">=7.3.0,<8.0.0"
+isort = ">=7.0.0,<8.0.0"
+mypy = ">=1.18.2,<2.0.0"
+
 
 [tool.black]
 line-length = 119

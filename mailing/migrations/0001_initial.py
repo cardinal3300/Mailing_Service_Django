@@ -7,47 +7,60 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Mailing',
+            name="Mailing",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('send_time', models.DateTimeField(blank=True, null=True, verbose_name='Дата и время первой отправки')),
-                ('end_time', models.DateTimeField(blank=True, null=True, verbose_name='Дата и время окончания отправки')),
-                ('status', models.CharField(choices=[('created', 'Создана'), ('running', 'Запущена'), ('completed', 'Завершена')], default='created', max_length=20, verbose_name='Статус')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "send_time",
+                    models.DateTimeField(blank=True, null=True, verbose_name="Дата и время первой отправки"),
+                ),
+                (
+                    "end_time",
+                    models.DateTimeField(blank=True, null=True, verbose_name="Дата и время окончания отправки"),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[("created", "Создана"), ("running", "Запущена"), ("completed", "Завершена")],
+                        default="created",
+                        max_length=20,
+                        verbose_name="Статус",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Рассылка',
-                'verbose_name_plural': 'Рассылки',
+                "verbose_name": "Рассылка",
+                "verbose_name_plural": "Рассылки",
             },
         ),
         migrations.CreateModel(
-            name='Message',
+            name="Message",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('subject', models.CharField(max_length=150, verbose_name='Тема письма')),
-                ('body', models.TextField(verbose_name='Тело письма')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("subject", models.CharField(max_length=150, verbose_name="Тема письма")),
+                ("body", models.TextField(verbose_name="Тело письма")),
             ],
             options={
-                'verbose_name': 'Сообщение',
-                'verbose_name_plural': 'Сообщения',
+                "verbose_name": "Сообщение",
+                "verbose_name_plural": "Сообщения",
             },
         ),
         migrations.CreateModel(
-            name='Recipient',
+            name="Recipient",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254, unique=True, verbose_name='Email')),
-                ('first_name', models.CharField(blank=True, max_length=100, null=True, verbose_name='Имя')),
-                ('last_name', models.CharField(blank=True, max_length=100, null=True, verbose_name='Фамилия')),
-                ('comment', models.TextField(blank=True, null=True, verbose_name='Комментарий')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("email", models.EmailField(max_length=254, unique=True, verbose_name="Email")),
+                ("first_name", models.CharField(blank=True, max_length=100, null=True, verbose_name="Имя")),
+                ("last_name", models.CharField(blank=True, max_length=100, null=True, verbose_name="Фамилия")),
+                ("comment", models.TextField(blank=True, null=True, verbose_name="Комментарий")),
             ],
             options={
-                'verbose_name': 'Получатель',
-                'verbose_name_plural': 'Получатели',
+                "verbose_name": "Получатель",
+                "verbose_name_plural": "Получатели",
             },
         ),
     ]
