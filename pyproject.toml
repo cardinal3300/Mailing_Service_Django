@@ -28,6 +28,7 @@ black = ">=25.9.0,<26.0.0"
 flake8 = ">=7.3.0,<8.0.0"
 isort = ">=7.0.0,<8.0.0"
 mypy = ">=1.18.2,<2.0.0"
+django-extensions = "^4.1"
 
 
 [tool.black]

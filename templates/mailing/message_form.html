@@ -1,8 +1,0 @@
-<!-- mailing/message_form.html -->
-<h1>{% if form_title %}{{ form_title }}{% else %}{% if object %}Редактировать{% else %}Создать{% endif %}{% endif %} сообщение</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-</form>
-<a href="{% url 'mailing:message_list' %}">Назад к списку</a>

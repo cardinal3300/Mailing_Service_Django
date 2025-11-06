@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Отправка сообщения{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Отправка сообщений по требованию</h1>
+<form method="post">
+    {% csrf_token %}
+    <label for="mailing">Выберите рассылку:</label>
+    <select name="mailing_id" id="mailing">
+        {% for mailing in mailings %}
+            <option value="{{ mailing.pk }}">{{ mailing }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-success">Отправить</button>
+</form>
+<a href="{% url 'mailing:home' %}" class="btn btn-primary">На главную</a>
+{% endblock %}

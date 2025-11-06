@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <h1 class="mb-4 text-center">Главная страница рассылок</h1>
+
+  <div class="row text-center mb-5">
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title text-muted">Всего рассылок</h5>
+          <h2 class="fw-bold text-primary">{{ total_mailings }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title text-muted">Активных рассылок</h5>
+          <h2 class="fw-bold text-success">{{ active_mailings }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title text-muted">Уникальных получателей</h5>
+          <h2 class="fw-bold text-info">{{ unique_recipients }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <h4 class="mb-3">Навигация</h4>
+    <div class="d-flex justify-content-center flex-wrap gap-3">
+      <a href="{% url 'mailing:recipient_list' %}" class="btn btn-outline-primary">
+        📇 Получатели
+      </a>
+      <a href="{% url 'mailing:message_list' %}" class="btn btn-outline-secondary">
+        💬 Сообщения
+      </a>
+      <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-success">
+        📤 Рассылки
+      </a>
+      <a href="{% url 'mailing:send_mailing' %}" class="btn btn-primary">
+        🚀 Отправить рассылку
+      </a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

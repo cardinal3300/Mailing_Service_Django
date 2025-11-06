@@ -5,7 +5,6 @@ from users.models import UserService
 
 class Recipient(models.Model):
     """Получатель рассылки."""
-
     email = models.EmailField(unique=True, verbose_name="Email")
     first_name = models.CharField(max_length=100, verbose_name="Имя", blank=True, null=True)
     last_name = models.CharField(max_length=100, verbose_name="Фамилия", blank=True, null=True)
@@ -21,12 +20,11 @@ class Recipient(models.Model):
 
 class Message(models.Model):
     """Сообщение для рассылки."""
-
     subject = models.CharField(max_length=150, verbose_name="Тема письма")
     body = models.TextField(verbose_name="Тело письма")
 
     def __str__(self):
-        return self.subject
+        return f"{self.subject}"
 
     class Meta:
         verbose_name = "Сообщение"
@@ -35,7 +33,6 @@ class Message(models.Model):
 
 class Mailing(models.Model):
     """Рассылка."""
-
     STATUS_CREATED = "created"  # Создана
     STATUS_RUNNING = "running"  # Запущена
     STATUS_COMPLETED = "completed"  # Завершена

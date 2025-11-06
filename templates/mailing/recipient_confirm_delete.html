@@ -1,8 +1,0 @@
-<!-- mailing/recipient_confirm_delete.html -->
-<h1>Удаление получателя</h1>
-<p>Вы уверены, что хотите удалить получателя "{{ recipient.email }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Да, удалить</button>
-    <a href="{% url  'mailing:recipient_list' %}">Отмена</a>
-</form>
