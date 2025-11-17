@@ -33,9 +33,9 @@ class Message(models.Model):
 
 class Mailing(models.Model):
     """Рассылка."""
-    STATUS_CREATED = "created"  # Создана
-    STATUS_RUNNING = "running"  # Запущена
-    STATUS_COMPLETED = "completed"  # Завершена
+    STATUS_CREATED = "created"
+    STATUS_RUNNING = "running"
+    STATUS_COMPLETED = "completed"
     STATUS_CHOICES = [
         (STATUS_CREATED, "Создана"),
         (STATUS_RUNNING, "Запущена"),
@@ -47,9 +47,7 @@ class Mailing(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED, verbose_name="Статус")
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     recipients = models.ManyToManyField(Recipient, verbose_name="Получатели")
-    owner = models.ForeignKey(
-        UserService, on_delete=models.CASCADE, verbose_name="Владелец", null=True, blank=True
-    )  # Добавление владельца
+    owner = models.ForeignKey(UserService, on_delete=models.CASCADE, verbose_name="Владелец", blank=True, null=True)
 
     def __str__(self):
         return f"Рассылка: {self.message.subject} - Статус: {self.status}"
@@ -57,3 +55,20 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
+
+
+class MailingAttempt(models.Model):
+    """Попытка рассылки."""
+    mailing = models.ForeignKey("mailing.Mailing", on_delete=models.CASCADE, verbose_name="Рассылка")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время попытки")
+    status = models.CharField(max_length=50, verbose_name="Статус", blank=True, null=True)
+    is_success = models.BooleanField(default=False, verbose_name="Успешно")
+    server_response = models.TextField(verbose_name="Ответ почтового сервера", blank=True, null=True)
+    recipient = models.ForeignKey("mailing.Recipient", on_delete=models.CASCADE, verbose_name="Получатель")
+
+    def __str__(self):
+        return f"Попытка рассылки {self.mailing.message.subject} - {self.status}"
+
+    class Meta:
+        verbose_name = "Попытка рассылки"
+        verbose_name_plural = "Попытки рассылки"

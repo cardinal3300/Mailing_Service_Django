@@ -8,7 +8,7 @@
     {% csrf_token %}
     {{ form.non_field_errors }}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
 </form>
-<a href="{% url 'mailing:recipient_list' %}" class="my-3 btn btn-primary">Назад к списку</a>
+<a href="{% url 'mailing:recipient_list' %}" class="my-3 btn btn-outline-primary">Назад к списку</a>
 {% endblock %}

@@ -1,18 +1,38 @@
 {% extends "base.html" %}
 
-{% block title %}Отправка сообщения{% endblock %}
+{% block title %}Отправка сообщений{% endblock %}
 
 {% block content %}
+
 <h1 class="mb-4">Отправка сообщений по требованию</h1>
-<form method="post">
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if mailings %}
+<form method="post" class="card p-4 shadow-sm mb-4">
     {% csrf_token %}
-    <label for="mailing">Выберите рассылку:</label>
-    <select name="mailing_id" id="mailing">
+
+    <label for="mailing" class="form-label fw-semibold">Выберите рассылку:</label>
+    <select name="mailing_id" id="mailing" class="form-select mb-3">
         {% for mailing in mailings %}
             <option value="{{ mailing.pk }}">{{ mailing }}</option>
         {% endfor %}
     </select>
-    <button type="submit" class="btn btn-success">Отправить</button>
+
+    <button type="submit" class="btn btn-outline-success w-100">
+        🚀 Отправить рассылку
+    </button>
 </form>
-<a href="{% url 'mailing:home' %}" class="btn btn-primary">На главную</a>
+{% else %}
+<div class="alert alert-info">
+    Пока нет доступных рассылок.
+</div>
+{% endif %}
+
+<a href="{% url 'mailing:home' %}" class="btn btn-outline-primary">⬅ На главную</a>
+
 {% endblock %}

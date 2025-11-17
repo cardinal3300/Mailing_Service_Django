@@ -5,7 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 class UserManager(BaseUserManager):
     """Кастомный менеджер пользователей."""
-
     use_in_migrations = True
 
     def create_user(self, email, password=None, **extra_fields):
@@ -32,17 +31,13 @@ class UserManager(BaseUserManager):
 
 class UserService(AbstractUser):
     """Кастомная модель пользователя."""
-
     username = None  # Убираем стандартное поле username
-    email = models.EmailField(_("email address"), unique=True)  # Email - уникальный идентификатор
-
+    email = models.EmailField(_("email address"), unique=True)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, verbose_name="Аватар")
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Номер телефона")
     country = models.CharField(max_length=100, blank=True, null=True, verbose_name="Страна")
-
-    USERNAME_FIELD = "email"  # Указываем email в качестве логина
-    REQUIRED_FIELDS = []  # Убираем username из обязательных полей (оставляем только email)
-
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
     objects = UserManager()
 
     def __str__(self):
@@ -51,22 +46,3 @@ class UserService(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
-
-
-class MailingAttempt(models.Model):
-    """Попытка рассылки."""
-
-    mailing = models.ForeignKey(
-        "mailing.Mailing", on_delete=models.CASCADE, verbose_name="Рассылка"
-    )  # ForeignKey на модель Mailing из приложения mailing
-    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время попытки")
-    status = models.CharField(max_length=50, verbose_name="Статус", blank=True, null=True)
-    server_response = models.TextField(verbose_name="Ответ почтового сервера", blank=True, null=True)
-    recipient = models.ForeignKey("mailing.Recipient", on_delete=models.CASCADE, verbose_name="Получатель")
-
-    def __str__(self):
-        return f"Попытка рассылки {self.mailing.message.subject} - {self.status}"
-
-    class Meta:
-        verbose_name = "Попытка рассылки"
-        verbose_name_plural = "Попытки рассылки"

@@ -2,6 +2,7 @@ from django import forms
 from .models import Mailing, Message, Recipient
 from django.core.exceptions import ValidationError
 
+
 class RecipientForm(forms.ModelForm):
     class Meta:
         model = Recipient
@@ -63,7 +64,7 @@ class MessageForm(forms.ModelForm):
 class MailingForm(forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ["send_time", "end_time", "status", "message", "owner", "recipients"]  # Включаем owner
+        fields = ["send_time", "end_time", "status", "message", "owner", "recipients"]
         widgets = {
             "send_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),
             "end_time": forms.DateTimeInput(attrs={"type": "datetime-local"}),

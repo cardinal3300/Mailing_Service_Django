@@ -6,7 +6,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / ".env")
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -15,7 +15,7 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = []
 
@@ -79,10 +79,21 @@ DATABASES = {
     }
 }
 
+EMAIL_HOST_USER = []
+
 AUTH_USER_MODEL = 'users.UserService'
 
 LOGIN_REDIRECT_URL = '/mailing/'
+
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv('REDIS_HOST'),
+        "IGNORE_EXCEPTIONS": True,
+        }
+}
 
 
 # Password validation

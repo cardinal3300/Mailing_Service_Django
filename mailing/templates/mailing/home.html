@@ -32,21 +32,32 @@
         </div>
       </div>
     </div>
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title text-muted">Попытки рассылок</h5>
+          <h2 class="fw-bold text-warning">{{ total_attempts }}</h2>
+          <p class="mt-2 mb-0">
+            <span class="text-success fw-semibold">Успешных:</span> {{ success_attempts }}<br>
+            <span class="text-danger fw-semibold">Ошибок:</span> {{ failed_attempts }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
-
   <div class="text-center">
     <h4 class="mb-3">Навигация</h4>
     <div class="d-flex justify-content-center flex-wrap gap-3">
       <a href="{% url 'mailing:recipient_list' %}" class="btn btn-outline-primary">
         📇 Получатели
       </a>
-      <a href="{% url 'mailing:message_list' %}" class="btn btn-outline-secondary">
+      <a href="{% url 'mailing:message_list' %}" class="btn btn-outline-primary">
         💬 Сообщения
       </a>
-      <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-success">
+      <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-primary">
         📤 Рассылки
       </a>
-      <a href="{% url 'mailing:send_mailing' %}" class="btn btn-primary">
+      <a href="{% url 'mailing:send_mailing' %}" class="btn btn-outline-primary">
         🚀 Отправить рассылку
       </a>
     </div>

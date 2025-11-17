@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from users.models import MailingAttempt, UserService
-
+from users.models import UserService
+from mailing.models import MailingAttempt
 
 @admin.register(UserService)
 class CustomUserAdmin(UserAdmin):

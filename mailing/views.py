@@ -2,14 +2,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
-
 from mailing.forms import MailingForm, MessageForm, RecipientForm
 from mailing.models import Mailing, Message, Recipient
-from users.models import MailingAttempt
+from mailing.services import MailingAttempt
 
 
 # Декоратор login_required для защиты CBV
@@ -24,6 +23,9 @@ class HomeView(ListView):
         context["total_mailings"] = Mailing.objects.count()
         context["active_mailings"] = Mailing.objects.filter(status=Mailing.STATUS_RUNNING).count()
         context["unique_recipients"] = Recipient.objects.count()
+        context["total_attempts"] = MailingAttempt.objects.count()
+        context["success_attempts"] = MailingAttempt.objects.filter(is_success=True).count()
+        context["failed_attempts"] = MailingAttempt.objects.exclude(is_success=False).count()
         return context
 
 
@@ -162,30 +164,49 @@ class SendMailView(View):
 
     def post(self, request, *args, **kwargs):
         mailing_id = request.POST.get("mailing_id")
+
         try:
             mailing = Mailing.objects.get(pk=mailing_id)
-            # Рассылка писем
-            for recipient in mailing.recipients.all():
-                try:
-                    send_mail(
-                        mailing.message.subject,
-                        mailing.message.body,
-                        settings.EMAIL_HOST_USER,
-                        [recipient.email],
-                        fail_silently=False,
-                    )
-                    MailingAttempt.objects.create(mailing=mailing, recipient=recipient, status="Sent")
-                except Exception as e:
-                    MailingAttempt.objects.create(
-                        mailing=mailing, recipient=recipient, status=f"Error: {e}", server_response=str(e)
-                    )
-                    messages.error(request, f"Ошибка при отправке {recipient.email}: {e}")
-
-            messages.success(request, "Сообщения успешно отправлены.")
         except Mailing.DoesNotExist:
             messages.error(request, "Рассылка не найдена.")
-        except Exception as e:
-            messages.error(request, f"Произошла ошибка: {e}")
+            return redirect("mailing:send_mailing")
 
-        mailings = Mailing.objects.all()
-        return render(request, self.template_name, {"mailings": mailings})
+        recipients = mailing.recipients.all()
+
+        for recipient in recipients:
+
+            # 1) Инициация попытки (записываем факт начала)
+            attempt = MailingAttempt.objects.create(
+                mailing=mailing,
+                recipient=recipient,
+                status="Started",
+                server_response="Attempt initiated",
+                is_success=False
+            )
+
+            # 2) Отправка
+            try:
+                send_mail(
+                    mailing.message.subject,
+                    mailing.message.body,
+                    settings.EMAIL_HOST_USER,
+                    [recipient.email],
+                    fail_silently=False,
+                )
+
+                # обновление попытки
+                attempt.status = "Success"
+                attempt.server_response = "Email sent"
+                attempt.is_success = True
+                attempt.save()
+
+            except Exception as e:
+                attempt.status = "Failed"
+                attempt.server_response = str(e)
+                attempt.is_success = False
+                attempt.save()
+
+                messages.error(request, f"Ошибка при отправке {recipient.email}: {e}")
+
+        messages.success(request, "Попытка рассылки выполнена.")
+        return redirect("mailing:send_mailing")
