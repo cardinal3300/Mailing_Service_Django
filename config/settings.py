@@ -19,6 +19,19 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'users.UserService'
+
+LOGIN_URL = "users:login"
+LOGIN_REDIRECT_URL = "mailing:home"
+LOGOUT_REDIRECT_URL = "users:login"
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 # Application definition
 
@@ -79,14 +92,6 @@ DATABASES = {
     }
 }
 
-EMAIL_HOST_USER = []
-
-AUTH_USER_MODEL = 'users.UserService'
-
-LOGIN_REDIRECT_URL = '/mailing/'
-
-LOGOUT_REDIRECT_URL = '/accounts/login/'
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -94,7 +99,6 @@ CACHES = {
         "IGNORE_EXCEPTIONS": True,
         }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

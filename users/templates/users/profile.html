@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}Профиль пользователя{% endblock %}
+{% block title %}Профиль{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Редактирование профиля</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-outline-success">💾 Сохранить</button>
-        <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">На главную</a>
-    </form>
-</div>
+
+<h1>Профиль пользователя</h1>
+<p>Email: {{ user.email }}</p>
+<p>Телефон: {{ user.phone }}</p>
+<p>Страна: {{ user.country }}</p>
+<p>
+    <a href="{% url 'users:edit_profile' %}" class="btn btn-outline-secondary">✏️ Редактировать профиль</a>
+    <a href="{% url 'mailing:home' %}" class="btn btn-outline-secondary">⬅️ На главную</a>
+</p>
 {% endblock %}

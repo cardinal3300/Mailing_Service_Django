@@ -20,12 +20,14 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["total_mailings"] = Mailing.objects.count()
-        context["active_mailings"] = Mailing.objects.filter(status=Mailing.STATUS_RUNNING).count()
+        user = self.request.user
+        attempts = MailingAttempt.objects.filter(mailing__owner=user)
+        context["total_mailings"] = attempts.count()
+        context["active_mailings"] = attempts.filter(status=Mailing.STATUS_RUNNING).count()
         context["unique_recipients"] = Recipient.objects.count()
-        context["total_attempts"] = MailingAttempt.objects.count()
-        context["success_attempts"] = MailingAttempt.objects.filter(is_success=True).count()
-        context["failed_attempts"] = MailingAttempt.objects.exclude(is_success=False).count()
+        context["total_attempts"] = attempts.count()
+        context["success_attempts"] = attempts.filter(is_success=True).count()
+        context["failed_attempts"] = attempts.filter(is_success=False).count()
         return context
 
 
