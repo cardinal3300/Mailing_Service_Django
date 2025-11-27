@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, TemplateView, UpdateView, ListView
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -19,6 +21,7 @@ from .forms import UserRegisterForm, UserLoginForm, UserService, UserProfileForm
 User = get_user_model()
 
 
+@method_decorator(cache_page(60*5), name="dispatch")
 class UsersListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     """Страница списка пользователей.
         Доступ:

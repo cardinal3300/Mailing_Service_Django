@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 from mailing.forms import MailingForm, MessageForm, RecipientForm
 from mailing.models import Mailing, Message, Recipient
@@ -12,7 +13,7 @@ from mailing.services import MailingAttempt
 
 
 # Декоратор login_required для защиты CBV
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class HomeView(ListView):
     model = Mailing
     template_name = "mailing/home.html"
@@ -32,7 +33,7 @@ class HomeView(ListView):
 
 
 # Получатели:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class RecipientListView(ListView):
     model = Recipient
     template_name = "mailing/recipient_list.html"
@@ -86,7 +87,7 @@ class RecipientDeleteView(DeleteView):
 
 
 # Сообщения:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class MessageListView(ListView):
     model = Message
     template_name = "mailing/message_list.html"
@@ -140,7 +141,7 @@ class MessageDeleteView(DeleteView):
 
 
 # Рассылки:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class MailingListView(ListView):
     model = Mailing
     template_name = "mailing/mailing_list.html"
