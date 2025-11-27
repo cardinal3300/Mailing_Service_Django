@@ -1,5 +1,6 @@
 from django.db import models
 
+from config import settings
 from users.models import UserService
 
 
@@ -9,6 +10,7 @@ class Recipient(models.Model):
     first_name = models.CharField(max_length=100, verbose_name="Имя", blank=True, null=True)
     last_name = models.CharField(max_length=100, verbose_name="Фамилия", blank=True, null=True)
     comment = models.TextField(verbose_name="Комментарий", blank=True, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="recipients", blank=True, null=True)
 
     def __str__(self):
         return f"{self.email}"
@@ -16,12 +18,16 @@ class Recipient(models.Model):
     class Meta:
         verbose_name = "Получатель"
         verbose_name_plural = "Получатели"
+        permissions = [
+            ("view_all_recipients", "Просмотр всех клиентов"),
+        ]
 
 
 class Message(models.Model):
     """Сообщение для рассылки."""
     subject = models.CharField(max_length=150, verbose_name="Тема письма")
     body = models.TextField(verbose_name="Тело письма")
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="messages", blank=True, null=True)
 
     def __str__(self):
         return f"{self.subject}"
@@ -29,6 +35,9 @@ class Message(models.Model):
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
+        permissions = [
+            ("view_all_messages", "Просмотр всех сообщений"),
+        ]
 
 
 class Mailing(models.Model):
@@ -47,7 +56,7 @@ class Mailing(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_CREATED, verbose_name="Статус")
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name="Сообщение")
     recipients = models.ManyToManyField(Recipient, verbose_name="Получатели")
-    owner = models.ForeignKey(UserService, on_delete=models.CASCADE, verbose_name="Владелец", blank=True, null=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Владелец", related_name="mailings", blank=True, null=True)
 
     def __str__(self):
         return f"Рассылка: {self.message.subject} - Статус: {self.status}"
@@ -55,6 +64,10 @@ class Mailing(models.Model):
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
+        permissions = [
+            ("view_all_mailings", "Просмотр всех рассылок"),
+            ("disable_mailings", "Отключение рассылок"),
+        ]
 
 
 class MailingAttempt(models.Model):

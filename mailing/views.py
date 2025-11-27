@@ -37,6 +37,12 @@ class RecipientListView(ListView):
     model = Recipient
     template_name = "mailing/recipient_list.html"
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
+
 
 @method_decorator(login_required, name="dispatch")
 class RecipientCreateView(CreateView):
@@ -50,6 +56,10 @@ class RecipientCreateView(CreateView):
         context["form_title"] = "Добавление получателя"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class RecipientUpdateView(UpdateView):
@@ -62,6 +72,10 @@ class RecipientUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Редактирование получателя"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -77,6 +91,12 @@ class MessageListView(ListView):
     model = Message
     template_name = "mailing/message_list.html"
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
+
 
 @method_decorator(login_required, name="dispatch")
 class MessageCreateView(CreateView):
@@ -90,6 +110,10 @@ class MessageCreateView(CreateView):
         context["form_title"] = "Создание сообщения"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class MessageUpdateView(UpdateView):
@@ -102,6 +126,10 @@ class MessageUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Редактирование сообщения"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -117,6 +145,12 @@ class MailingListView(ListView):
     model = Mailing
     template_name = "mailing/mailing_list.html"
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
+
 
 @method_decorator(login_required, name="dispatch")
 class MailingCreateView(CreateView):
@@ -125,14 +159,14 @@ class MailingCreateView(CreateView):
     template_name = "mailing/mailing_form.html"
     success_url = reverse_lazy("mailing:mailing_list")
 
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Создание рассылки"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -146,6 +180,10 @@ class MailingUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Редактирование рассылки"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")

@@ -24,6 +24,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'mailing:send_mailing' %}">Отправить рассылку</a>
                 </li>
+                    {% if perms.users.view_service_users %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:users_list' %}">Списки пользователей</a>
+                        </li>
+                    {% endif %}
             </ul>
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}

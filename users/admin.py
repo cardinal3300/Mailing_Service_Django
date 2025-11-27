@@ -24,7 +24,6 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-    filter_horizontal = ()
-
+    filter_horizontal = ("groups", "user_permissions",)
 
 admin.site.register(MailingAttempt)

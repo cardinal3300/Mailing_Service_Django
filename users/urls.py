@@ -8,7 +8,9 @@ from .views import (
     ProfileEditView,
     ActivateAccountView,
     CustomPasswordResetView,
-    CustomPasswordResetConfirmView
+    CustomPasswordResetConfirmView,
+    UsersListView,
+    toggle_user_block
 )
 
 app_name = "users"
@@ -20,6 +22,8 @@ urlpatterns = [
     path("activate/<uidb64>/<token>/", ActivateAccountView.as_view(), name="activate"),
     path("profile/", UserProfileView.as_view(), name="profile"),
     path("profile/edit/", ProfileEditView.as_view(), name="edit_profile"),
+    path("list/", UsersListView.as_view(), name="users_list"),
+    path("toggle-block/<int:user_id>/", toggle_user_block, name="toggle_user_block"),
 
     # Восстановление пароля
     path("password_reset/", CustomPasswordResetView.as_view(template_name="users/password_reset_form.html"),

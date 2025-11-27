@@ -48,18 +48,13 @@
   <div class="text-center">
     <h4 class="mb-3">Навигация</h4>
     <div class="d-flex justify-content-center flex-wrap gap-3">
-      <a href="{% url 'mailing:recipient_list' %}" class="btn btn-outline-primary">
-        📇 Получатели
-      </a>
-      <a href="{% url 'mailing:message_list' %}" class="btn btn-outline-primary">
-        💬 Сообщения
-      </a>
-      <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-primary">
-        📤 Рассылки
-      </a>
-      <a href="{% url 'mailing:send_mailing' %}" class="btn btn-outline-primary">
-        🚀 Отправить рассылку
-      </a>
+      <a href="{% url 'mailing:recipient_list' %}" class="btn btn-outline-primary">📇 Получатели</a>
+      <a href="{% url 'mailing:message_list' %}" class="btn btn-outline-primary">💬 Сообщения</a>
+      <a href="{% url 'mailing:mailing_list' %}" class="btn btn-outline-primary">📤 Рассылки</a>
+      <a href="{% url 'mailing:send_mailing' %}" class="btn btn-outline-primary">🚀 Отправить рассылку</a>
+          {% if perms.users.view_service_users %}
+            <a href="{% url 'users:users_list' %}" class="btn btn-outline-primary">⭐ Списки пользователей</a>
+          {% endif %}
     </div>
   </div>
 
