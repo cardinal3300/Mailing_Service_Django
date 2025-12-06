@@ -5,6 +5,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 from mailing.forms import MailingForm, MessageForm, RecipientForm
 from mailing.models import Mailing, Message, Recipient
@@ -12,7 +13,7 @@ from mailing.services import MailingAttempt
 
 
 # Декоратор login_required для защиты CBV
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class HomeView(ListView):
     model = Mailing
     template_name = "mailing/home.html"
@@ -20,20 +21,28 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["total_mailings"] = Mailing.objects.count()
-        context["active_mailings"] = Mailing.objects.filter(status=Mailing.STATUS_RUNNING).count()
+        user = self.request.user
+        attempts = MailingAttempt.objects.filter(mailing__owner=user)
+        context["total_mailings"] = attempts.count()
+        context["active_mailings"] = attempts.filter(status=Mailing.STATUS_RUNNING).count()
         context["unique_recipients"] = Recipient.objects.count()
-        context["total_attempts"] = MailingAttempt.objects.count()
-        context["success_attempts"] = MailingAttempt.objects.filter(is_success=True).count()
-        context["failed_attempts"] = MailingAttempt.objects.exclude(is_success=False).count()
+        context["total_attempts"] = attempts.count()
+        context["success_attempts"] = attempts.filter(is_success=True).count()
+        context["failed_attempts"] = attempts.filter(is_success=False).count()
         return context
 
 
 # Получатели:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class RecipientListView(ListView):
     model = Recipient
     template_name = "mailing/recipient_list.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -48,6 +57,10 @@ class RecipientCreateView(CreateView):
         context["form_title"] = "Добавление получателя"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class RecipientUpdateView(UpdateView):
@@ -61,6 +74,10 @@ class RecipientUpdateView(UpdateView):
         context["form_title"] = "Редактирование получателя"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class RecipientDeleteView(DeleteView):
@@ -70,10 +87,16 @@ class RecipientDeleteView(DeleteView):
 
 
 # Сообщения:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class MessageListView(ListView):
     model = Message
     template_name = "mailing/message_list.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -88,6 +111,10 @@ class MessageCreateView(CreateView):
         context["form_title"] = "Создание сообщения"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class MessageUpdateView(UpdateView):
@@ -101,6 +128,10 @@ class MessageUpdateView(UpdateView):
         context["form_title"] = "Редактирование сообщения"
         return context
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name="dispatch")
 class MessageDeleteView(DeleteView):
@@ -110,10 +141,16 @@ class MessageDeleteView(DeleteView):
 
 
 # Рассылки:
-@method_decorator(login_required, name="dispatch")
+@method_decorator([cache_page(60*5), login_required], name="dispatch")
 class MailingListView(ListView):
     model = Mailing
     template_name = "mailing/mailing_list.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.groups.filter(name="Менеджеры").exists():
+            return Mailing.objects.all()
+        return Mailing.objects.filter(owner=user)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -123,14 +160,14 @@ class MailingCreateView(CreateView):
     template_name = "mailing/mailing_form.html"
     success_url = reverse_lazy("mailing:mailing_list")
 
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Создание рассылки"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -144,6 +181,10 @@ class MailingUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["form_title"] = "Редактирование рассылки"
         return context
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 
 @method_decorator(login_required, name="dispatch")

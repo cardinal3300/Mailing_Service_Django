@@ -1,5 +1,3 @@
-import os
-
 from django.core.mail import send_mail
 from django.utils import timezone
 from dotenv import load_dotenv

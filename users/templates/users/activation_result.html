@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<p>{{ message }}</p>
+
+{% if success %}
+    <a href="{% url 'users:login' %}" class="btn">Войти</a>
+{% else %}
+    <a href="{% url 'users:register' %}" class="btn">Регистрация</a>
+{% endif %}
+{% endblock %}

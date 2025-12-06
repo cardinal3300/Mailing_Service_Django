@@ -1,0 +1,3 @@
+<a href="{% url 'users:toggle_user_block' user.id %}" class="btn btn-warning">
+    {% if user.is_active %}Заблокировать{% else %}Разблокировать{% endif %}
+</a>
