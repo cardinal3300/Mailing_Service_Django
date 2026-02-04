@@ -27,7 +27,6 @@ class UserService(AbstractUser):
     """Кастомная модель пользователя."""
     username = None  # Убираем стандартное поле username
     email = models.EmailField(_("email address"), unique=True)
-
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True, verbose_name="Аватар")
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="Номер телефона")
     country = models.CharField(max_length=100, blank=True, null=True, verbose_name="Страна")

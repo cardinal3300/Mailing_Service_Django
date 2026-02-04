@@ -9,6 +9,39 @@
 
 ---
 
+## Структура проекта
+
+```bash
+    mailing_service_Django/
+    ├─ config/                 # Основные настройки проекта Django
+    ├─ mailing/                # Приложение рассылок
+    │  ├─ management/
+    │  ├─ migrations/
+    │  ├─ templates/
+    │  ├─ admin.py
+    │  ├─ forms.py
+    │  ├─ models.py
+    │  ├─ services.py
+    │  ├─ urls.py
+    │  ├─ views.py
+    ├─ static/                 # Bootstrap
+    ├─ templates/              # Базовый шаблон
+    │      ├─ base.html  
+    ├─ users/                  # Приложение пользователей
+    │    ├─ management/
+    │    ├─ migrations/
+    │    ├─ templatess/
+    │    ├─ admin.py
+    │    ├─ models.py
+    ├─ .env.semple
+    ├─ README.md
+    ├─ manage.py               # Выполнение административных задач
+    ├─ .flake8
+    ├─ requirements.txt
+```
+
+---
+
 ## Технологии
 - Python 3.14
 - Django 5.2
@@ -45,39 +78,6 @@
     ```bash
     python manage.py runserver   
        
----
-
-## Структура проекта
-
-```bash
-    mailing_service_Django/
-    ├─ config/                 # Основные настройки проекта Django
-    ├─ mailing/                # Приложение рассылок
-    │  ├─ management/
-    │  ├─ migrations/
-    │  ├─ templates/
-    │  ├─ admin.py
-    │  ├─ forms.py
-    │  ├─ models.py
-    │  ├─ services.py
-    │  ├─ urls.py
-    │  ├─ views.py
-    ├─ static/                 # Bootstrap
-    ├─ templates/              # Базовый шаблон
-    │      ├─ base.html  
-    ├─ users/                  # Приложение пользователей
-    │    ├─ management/
-    │    ├─ migrations/
-    │    ├─ templatess/
-    │    ├─ admin.py
-    │    ├─ models.py
-    ├─ .env.semple
-    ├─ README.md
-    ├─ manage.py               # Выполнение административных задач
-    ├─ .flake8
-    ├─ requirements.txt
-```
-
 ---
 
 ## Функционал
